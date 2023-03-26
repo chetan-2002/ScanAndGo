@@ -35,7 +35,7 @@ Another significant advantage of the proposed QR code-based solution is that it 
 
 To do that I have developed a [QR code generator](https://github.com/chetan-2002/QRGenerator) , where the college library admin has to just enter some credentials and it would generate a unique QR code for them.After that the work is easy , just download that QR Code, print it , and thats it.
 
-## Statistical Impact of this Solution
+## Understanding Impact of the Solution
 
 ### Assumptions:
 
