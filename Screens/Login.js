@@ -9,6 +9,7 @@ import {
   Input,
   Link,
   Pressable,
+  Spinner,
   Text,
   VStack,
   WarningOutlineIcon,
@@ -142,7 +143,9 @@ const Login = ({navigation}) => {
                   colorScheme="blue"
                   variant={'solid'}
                   onPress={loginHandler}
-                  isLoading={loading}>
+                  isLoading={loading}
+                  spinnerPlacement="start"
+                  isLoadingText="Signing In">
                   <Text
                     style={{
                       color: 'white',
