@@ -50,6 +50,10 @@ To do that I have developed a [QR code generator](https://github.com/chetan-2002
 3. Assuming that a standard A4 sheet weighs approximately 4.5 grams, the total amount of paper used per year would be: 23,400,000 pages x 4.5 grams per page = 105,300,000 grams of paper per year or 105.3 metric tons of paper per year.
 4. If we assume that one tree can produce approximately 16.67 reams of A4 paper, and each ream contains 500 sheets, then we can estimate that 105.3 metric tons of paper would require approximately 634 trees to produce.
 
+## Project Walkthrough Video
+
+https://user-images.githubusercontent.com/77783033/227759411-538d8330-2c32-4df1-89ba-52bde8e3d206.mp4
+
 ## Conclusion:
 
 Implementing a QR code-based system for library attendance tracking in colleges across India could potentially save up to 23,400,000 pages of paper per year, which translates to approximately 105.3 metric tons of paper or 634 trees annually. These figures demonstrate the significant environmental impact that this solution can have by reducing paper wastage and promoting sustainability in educational institutions, even with a shorter working period of 200 days per year.
