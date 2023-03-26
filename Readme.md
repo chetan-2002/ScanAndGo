@@ -31,6 +31,10 @@ The problem that this solution solves is the time-consuming and outdated process
 
 Another significant advantage of the proposed QR code-based solution is that it significantly reduces paper wastage. With the manual register system, each student entry requires a new page, and the registers can fill up quickly, leading to the consumption of a large amount of paper. However, with the QR code system, all the entry records are stored in a digital database, eliminating the need for physical paper records. This not only saves paper but also helps in the conservation of natural resources and reduces the environmental impact of the library.
 
+### Now, you might be wondering how the colleges would generate a unique QR code?
+
+To do that I have developed a [QR code generator](https://github.com/chetan-2002/QRGenerator) , where the college library admin has to just enter some credentials and it would generate a unique QR code for them.After that the work is easy , just download that QR Code, print it , and thats it.
+
 ## Statistical Impact of this Solution
 
 ### Assumptions:
