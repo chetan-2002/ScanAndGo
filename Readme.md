@@ -4,7 +4,7 @@ Scan and Go is a mobile application built using React Native that enables users 
 
 ## Working App can be found here
 
-https://drive.google.com/file/d/1pRFkDXn2nmmCLokqjSZP4v_3X9zOPCBn/view?usp=share_link
+https://drive.google.com/file/d/1xAvCcYZeEmNKsBjYj-VN27EQHzKbXzDE/view?usp=sharing
 
 ## Features
 
