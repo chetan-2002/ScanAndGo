@@ -22,6 +22,7 @@ import {Alert, ScrollView} from 'react-native';
 import assets from '../assets';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {addDoc, collection} from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -35,7 +36,13 @@ const Signup = ({navigation}) => {
   const [enrollmentnoRequired, setEnrollmentnoRequired] = useState(false);
   const [show, setShow] = useState(false);
 
-  const signupHandler = ({navigation}) => {
+  const setAsyncStorage = async uid => {
+    await AsyncStorage.setItem('UID', uid)
+      .then(() => {})
+      .catch(error => console.log(error));
+  };
+
+  const signupHandler = () => {
     if (name === '') {
       setNameRequired(true);
       return;
@@ -57,6 +64,7 @@ const Signup = ({navigation}) => {
       .then(userCredential => {
         const user = userCredential.user;
         navigation.replace('ScanQr');
+        setAsyncStorage(user.uid);
         addDoc(collection(db, 'users'), {
           name: name,
           email: email,
@@ -245,7 +253,7 @@ const Signup = ({navigation}) => {
                       fontWeight: 'medium',
                       fontSize: 'sm',
                     }}
-                    onPress={() => navigation.navigate('Login')}>
+                    onPress={() => navigation.replace('Login')}>
                     Sign In
                   </Link>
                 </HStack>

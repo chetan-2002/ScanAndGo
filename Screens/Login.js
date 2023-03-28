@@ -22,6 +22,7 @@ import {useEffect, useState} from 'react';
 import {auth} from '../firebase-config';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -30,6 +31,30 @@ const Login = ({navigation}) => {
   const [emailRequired, setEmailRequired] = useState(false);
   const [passwordRequired, setPasswordRequired] = useState(false);
   const [show, setShow] = useState(false);
+  const [renderLoginScreen, setRenderLoginScreen] = useState(false);
+
+  const getItem = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UID');
+      if (value !== null) {
+        navigation.replace('ScanQr');
+      } else {
+        setRenderLoginScreen(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getItem();
+  }, []);
+
+  const setAsyncStorage = async uid => {
+    await AsyncStorage.setItem('UID', uid)
+      .then(() => {})
+      .catch(error => console.log(error));
+  };
   const loginHandler = () => {
     setLoading(true);
     if (email === '') {
@@ -43,6 +68,7 @@ const Login = ({navigation}) => {
       .then(userCredential => {
         const user = userCredential.user;
         navigation.replace('ScanQr');
+        setAsyncStorage(user.uid);
       })
       .catch(error => {
         const errorCode = error.code;
@@ -53,133 +79,143 @@ const Login = ({navigation}) => {
   };
   return (
     <>
-      <Box
-        style={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '50%',
-        }}>
-        <AnimatedLottieView source={assets.lottieFiles.login} autoPlay loop />
-      </Box>
-      <ScrollView>
-        <Box>
-          <Center w="100%">
-            <Box safeArea p="2" py="8" w="90%">
-              <Heading
-                size="lg"
-                fontWeight="600"
-                color="coolGray.800"
-                _dark={{
-                  color: 'warmGray.50',
-                }}>
-                Welcome Back,
-              </Heading>
-              <Heading
-                mt="1"
-                _dark={{
-                  color: 'warmGray.200',
-                }}
-                color="coolGray.600"
-                fontWeight="medium"
-                size="xs">
-                Sign in to continue!
-              </Heading>
-
-              <VStack space={3} mt="5">
-                <FormControl
-                  isRequired
-                  isInvalid={emailRequired && email == ''}>
-                  <FormControl.Label>Email</FormControl.Label>
-                  <Input
-                    fontSize={16}
-                    type="email"
-                    variant="underlined"
-                    value={email}
-                    onChangeText={val => {
-                      setEmail(val);
-                    }}
-                  />
-                  <FormControl.ErrorMessage
-                    leftIcon={<WarningOutlineIcon size="xs" />}>
-                    Email is required
-                  </FormControl.ErrorMessage>
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={passwordRequired && password == ''}>
-                  <FormControl.Label>Password</FormControl.Label>
-                  <Input
-                    value={password}
-                    onChangeText={val => {
-                      setPassword(val);
-                    }}
-                    fontSize={16}
-                    variant={'underlined'}
-                    type={show ? 'text' : 'password'}
-                    InputRightElement={
-                      <Pressable onPress={() => setShow(!show)}>
-                        <Icon
-                          as={
-                            <MaterialIcons
-                              name={show ? 'visibility' : 'visibility-off'}
-                            />
-                          }
-                          size={5}
-                          mr="2"
-                          color="muted.400"
-                        />
-                      </Pressable>
-                    }
-                    // placeholder="Password"
-                  />
-                  <FormControl.ErrorMessage
-                    leftIcon={<WarningOutlineIcon size="xs" />}>
-                    Password is required
-                  </FormControl.ErrorMessage>
-                </FormControl>
-                <Button
-                  mt="2"
-                  colorScheme="blue"
-                  variant={'solid'}
-                  onPress={loginHandler}
-                  isLoading={loading}
-                  spinnerPlacement="start"
-                  isLoadingText="Signing In">
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      padding: 4,
+      {renderLoginScreen ? (
+        <>
+          <Box
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '50%',
+            }}>
+            <AnimatedLottieView
+              source={assets.lottieFiles.login}
+              autoPlay
+              loop
+            />
+          </Box>
+          <ScrollView>
+            <Box>
+              <Center w="100%">
+                <Box safeArea p="2" py="8" w="90%">
+                  <Heading
+                    size="lg"
+                    fontWeight="600"
+                    color="coolGray.800"
+                    _dark={{
+                      color: 'warmGray.50',
                     }}>
-                    Sign In
-                  </Text>
-                </Button>
-                <HStack mt="6" justifyContent="center">
-                  <Text
-                    fontSize="sm"
-                    color="coolGray.600"
+                    Welcome Back,
+                  </Heading>
+                  <Heading
+                    mt="1"
                     _dark={{
                       color: 'warmGray.200',
-                    }}>
-                    I'm a new user.{' '}
-                  </Text>
-                  <Link
-                    _text={{
-                      color: 'indigo.500',
-                      fontWeight: 'medium',
-                      fontSize: 'sm',
                     }}
-                    onPress={() => navigation.navigate('Signup')}>
-                    Sign Up
-                  </Link>
-                </HStack>
-              </VStack>
+                    color="coolGray.600"
+                    fontWeight="medium"
+                    size="xs">
+                    Sign in to continue!
+                  </Heading>
+
+                  <VStack space={3} mt="5">
+                    <FormControl
+                      isRequired
+                      isInvalid={emailRequired && email == ''}>
+                      <FormControl.Label>Email</FormControl.Label>
+                      <Input
+                        fontSize={16}
+                        type="email"
+                        variant="underlined"
+                        value={email}
+                        onChangeText={val => {
+                          setEmail(val);
+                        }}
+                      />
+                      <FormControl.ErrorMessage
+                        leftIcon={<WarningOutlineIcon size="xs" />}>
+                        Email is required
+                      </FormControl.ErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      isRequired
+                      isInvalid={passwordRequired && password == ''}>
+                      <FormControl.Label>Password</FormControl.Label>
+                      <Input
+                        value={password}
+                        onChangeText={val => {
+                          setPassword(val);
+                        }}
+                        fontSize={16}
+                        variant={'underlined'}
+                        type={show ? 'text' : 'password'}
+                        InputRightElement={
+                          <Pressable onPress={() => setShow(!show)}>
+                            <Icon
+                              as={
+                                <MaterialIcons
+                                  name={show ? 'visibility' : 'visibility-off'}
+                                />
+                              }
+                              size={5}
+                              mr="2"
+                              color="muted.400"
+                            />
+                          </Pressable>
+                        }
+                        // placeholder="Password"
+                      />
+                      <FormControl.ErrorMessage
+                        leftIcon={<WarningOutlineIcon size="xs" />}>
+                        Password is required
+                      </FormControl.ErrorMessage>
+                    </FormControl>
+                    <Button
+                      mt="2"
+                      colorScheme="blue"
+                      variant={'solid'}
+                      onPress={loginHandler}
+                      isLoading={loading}
+                      spinnerPlacement="start"
+                      isLoadingText="Signing In">
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 14,
+                          fontWeight: 'bold',
+                          padding: 4,
+                        }}>
+                        Sign In
+                      </Text>
+                    </Button>
+                    <HStack mt="6" justifyContent="center">
+                      <Text
+                        fontSize="sm"
+                        color="coolGray.600"
+                        _dark={{
+                          color: 'warmGray.200',
+                        }}>
+                        I'm a new user.{' '}
+                      </Text>
+                      <Link
+                        _text={{
+                          color: 'indigo.500',
+                          fontWeight: 'medium',
+                          fontSize: 'sm',
+                        }}
+                        onPress={() => navigation.replace('Signup')}>
+                        Sign Up
+                      </Link>
+                    </HStack>
+                  </VStack>
+                </Box>
+              </Center>
             </Box>
-          </Center>
-        </Box>
-      </ScrollView>
+          </ScrollView>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
