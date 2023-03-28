@@ -29,15 +29,9 @@ const MyStack = () => {
         component={ScanQr}
         options={{
           headerTitle: 'Scan QR Code',
+          headerLeft: null,
         }}
       />
-      {/* <Stack.Screen
-        name="GenerateQR"
-        component={GenerateQr}
-        options={{
-          headerTitle: 'Generate QR Code',
-        }}
-      /> */}
       <Stack.Screen
         name="Success"
         component={Success}
@@ -45,9 +39,6 @@ const MyStack = () => {
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
-        name="AttendanceList"
-        component={AttendanceList}></Stack.Screen> */}
     </Stack.Navigator>
   );
 };
