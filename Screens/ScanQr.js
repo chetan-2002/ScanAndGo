@@ -2,46 +2,58 @@ import {Box, Button, Center, IconButton, Text} from 'native-base';
 import {useState} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {auth, db} from '../firebase-config';
-import AnimatedLottieView from 'lottie-react-native';
+
 import {addDoc, collection, onSnapshot, query, where} from 'firebase/firestore';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ScanQr = ({navigation}) => {
   const [data, setData] = useState('');
-  // const [cameraAllow, setCameraAllow] = useState(true);
+
+  const removeItem = async () => {
+    await AsyncStorage.removeItem('UID')
+      .then(() => {
+        navigation.replace('Login');
+      })
+      .catch(error => console.log(error));
+  };
   navigation.setOptions({
     headerRight: () => {
       return (
         <IconButton
-          onPress={() => navigation.replace('Login')}
+          onPress={() => {
+            removeItem();
+          }}
           icon={
             <MaterialIcons name="logout" size={24} color="black" />
           }></IconButton>
       );
     },
   });
-  const handleRead = async e => {
-    setData(e.data);
-    // Alert.alert('Success', 'Attendance Marked Successfully');
-    const currentUser = auth?.currentUser;
-    const uid = currentUser?.uid;
-    const q = query(collection(db, 'users'), where('uid', '==', uid));
-    onSnapshot(q, querySnapshot => {
-      querySnapshot.forEach(doc => {
-        addDoc(collection(db, 'attendance'), {
-          name: doc.data().name,
-          email: doc.data().email,
-          enrollmentno: doc.data().enrollmentno,
-          date: new Date().toUTCString(),
-          time: new Date().toLocaleTimeString(),
-          collegeName: e.data.toUpperCase(),
-        });
-      });
-    });
 
+  const allowRead = async e => {};
+  const handleRead = async e => {
+    await AsyncStorage.getItem('UID')
+      .then(uid => {
+        const q = query(collection(db, 'users'), where('uid', '==', uid));
+        onSnapshot(q, querySnapshot => {
+          querySnapshot.forEach(doc => {
+            addDoc(collection(db, 'attendance'), {
+              name: doc.data().name,
+              email: doc.data().email,
+              enrollmentno: doc.data().enrollmentno,
+              date: new Date().toUTCString(),
+              time: new Date().toLocaleTimeString(),
+              collegeName: e.data.toUpperCase(),
+            });
+          });
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    setData(e.data);
     navigation.navigate('Success');
-    // setData('');
   };
   return (
     <>
