@@ -1,6 +1,6 @@
 # Scan and Go
 
-Scan and Go is a mobile application built using React Native that enables users to scan QR codes and store the data in the backend. This application uses Firebase as a backend-as-a-service to store data. With Scan and Go, users can quickly scan QR codes and store the captured information in the cloud database. This app is designed to be user-friendly, and it offers an intuitive interface that allows users to scan codes with just a few taps.
+Scan and Go is a mobile application developed using React Native and Firebase. Its primary purpose is to streamline and modernize the process of student check-ins at college libraries. Instead of manually entering names in a register, the application utilizes QR code technology to automate and digitize the process.
 
 ## Working App can be found here
 
